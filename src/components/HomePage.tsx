@@ -41,20 +41,20 @@ export const HomePage: React.FC<HomePageProps> = ({
     {
       icon: Sparkles,
       color: "text-amber-500 bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-900/50",
-      title: "AI Notes Generation",
-      desc: "Instantly turns any topic or complex chapter into clean, cohesive, multi-section notes with textbook rigor.",
+      title: "Concise AI Notes",
+      desc: "Produces short, meaningful, exam-focused study notes that college students can read and revise quickly.",
     },
     {
       icon: FileCheck2,
       color: "text-blue-500 bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-900/50",
-      title: "Exam-Oriented Notes",
-      desc: "Specifically structured with definitions, 2/5/10-mark university questions, viva answers, and common exam traps.",
+      title: "Exam-Oriented Focus",
+      desc: "Structured with precise definitions, key points, step-by-step mechanics, and common exam pitfalls.",
     },
     {
       icon: HelpCircle,
       color: "text-purple-500 bg-purple-50 dark:bg-purple-950/40 border-purple-200 dark:border-purple-900/50",
       title: "AI Quiz Generator",
-      desc: "Generates custom 4-choice interactive practice quizzes with immediate scoring and detailed explanations.",
+      desc: "Test your memory with instant 4-choice interactive practice quizzes, immediate scoring, and explanations.",
     },
     {
       icon: FolderKanban,
@@ -77,33 +77,27 @@ export const HomePage: React.FC<HomePageProps> = ({
     {
       icon: Target,
       color: "text-indigo-500 bg-indigo-50 dark:bg-indigo-950/40 border-indigo-200 dark:border-indigo-900/50",
-      title: "Personalized Learning",
-      desc: "Tailor notes by target difficulty, note style (quick revision vs in-depth), output length, and custom prompts.",
+      title: "Adaptive Structure",
+      desc: "Sections intelligently adapt to your topic: code for programming, formulas for math, steps for processes.",
     },
     {
       icon: Zap,
       color: "text-yellow-500 bg-yellow-50 dark:bg-yellow-950/40 border-yellow-200 dark:border-yellow-900/50",
-      title: "Fast Generation",
-      desc: "Powered by Google Gemini 3.8 Flash for low-latency generation of comprehensive 15-module study packets.",
+      title: "Lightning-Fast Generation",
+      desc: "Powered by Google Gemini Flash for near-instant generation with strict length control and zero filler.",
     },
   ];
 
   const noteSectionsSummary = [
-    "1. Definition",
-    "2. Simple Explanation",
-    "3. Detailed Concepts",
-    "4. Why / Where Used",
-    "5. Syntax / Formulas",
-    "6. Illustrative Example",
-    "7. Clean Code Snippet",
-    "8. Line Explanation",
-    "9. Expected Output",
-    "10. Real-Life Analogy",
-    "11. Important Points",
-    "12. Common Exam Pitfalls",
-    "13. 2/5/10-Mark Questions",
-    "14. Viva Voce Q&A",
-    "15. Practice MCQs",
+    "📌 Precise Definition",
+    "📖 Simple Explanation",
+    "⭐ 4–8 Key Points",
+    "🔍 Step-by-Step Mechanism",
+    "💡 Clear Example",
+    "🌍 Practical Real-Life Use",
+    "💻 Syntax & Code (When relevant)",
+    "⚠️ Important Exam Notes",
+    "⚠️ Common Student Pitfalls",
   ];
 
   return (
@@ -233,7 +227,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   {/* Floating floating badges */}
                   <div className="pt-2 flex items-center justify-between text-xs text-gray-500">
                     <span className="flex items-center gap-1.5">
-                      <CheckCircle2 className="w-4 h-4 text-blue-500" /> 15 Structured Sections
+                      <CheckCircle2 className="w-4 h-4 text-blue-500" /> Concise Exam Notes
                     </span>
                     <button
                       onClick={() => onStartGenerate("DBMS Normalization", "DBMS")}
@@ -301,11 +295,11 @@ export const HomePage: React.FC<HomePageProps> = ({
               </div>
 
               <h3 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
-                Never Miss an Exam Question Again
+                Ace Every Exam With Focused Study Notes
               </h3>
 
               <p className="text-blue-100/90 text-sm sm:text-base leading-relaxed">
-                Standard AI chat gives generic answers. Our generator is instructed with a comprehensive 15-section academic template:
+                Standard AI chat gives generic answers. Our generator is instructed with an exam-tested academic structure:
               </p>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-2">
@@ -325,7 +319,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   onClick={() => onStartGenerate()}
                   className="px-6 py-3 rounded-xl bg-white hover:bg-blue-50 text-blue-950 font-bold text-sm shadow-md transition-colors cursor-pointer"
                 >
-                  Generate 15-Section Notes
+                  Generate Concise Notes
                 </button>
                 <button
                   onClick={onOpenMyNotes}

@@ -106,29 +106,56 @@ export function recordQuizAttempt(attempt: Omit<QuizAttemptRecord, "id" | "date"
 }
 
 export function getStudentStats(): StudentStats {
-  try {
-    const raw = localStorage.getItem(STATS_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch (e) {
-    console.error("Failed to read stats", e);
-  }
-
-  // Calculate default based on current storage
   const saved = getSavedNotes();
   const recent = getRecentNotes();
   const quizzes = getQuizHistory();
+
+  // Distinct topics studied
+  const allTopics = new Set<string>();
+  saved.forEach((n) => allTopics.add(n.topicTitle.toLowerCase().trim()));
+  recent.forEach((n) => allTopics.add(n.topicTitle.toLowerCase().trim()));
+
+  const revisionCount = saved.filter((n) => n.handwrittenSheet || n.revisionSheet).length;
+
   const avg = quizzes.length
     ? Math.round(quizzes.reduce((sum, q) => sum + q.percentage, 0) / quizzes.length)
     : 0;
 
-  const defaultStats: StudentStats = {
-    notesGenerated: Math.max(recent.length, saved.length),
+  // Topics with quiz score >= 70%
+  const passedTopics = new Set(
+    quizzes.filter((q) => q.percentage >= 70).map((q) => q.topic.toLowerCase().trim())
+  );
+
+  let rawStats: any = {};
+  try {
+    const raw = localStorage.getItem(STATS_KEY);
+    if (raw) rawStats = JSON.parse(raw);
+  } catch {}
+
+  const realStats: StudentStats = {
+    topicsStudied: Math.max(allTopics.size, rawStats.topicsStudied || 0),
+    notesGenerated: Math.max(recent.length, saved.length, rawStats.notesGenerated || 0),
     notesSaved: saved.length,
-    quizzesCompleted: quizzes.length,
+    revisionSheetsCreated: Math.max(revisionCount, rawStats.revisionSheetsCreated || 0),
+    quizzesCompleted: Math.max(quizzes.length, rawStats.quizzesCompleted || 0),
     averageQuizScore: avg,
+    topicsCompleted: Math.max(passedTopics.size, rawStats.topicsCompleted || 0),
   };
-  localStorage.setItem(STATS_KEY, JSON.stringify(defaultStats));
-  return defaultStats;
+
+  localStorage.setItem(STATS_KEY, JSON.stringify(realStats));
+  return realStats;
+}
+
+export function recordRevisionSheetCreated(): void {
+  const current = getStudentStats();
+  current.revisionSheetsCreated = (current.revisionSheetsCreated || 0) + 1;
+  localStorage.setItem(STATS_KEY, JSON.stringify(current));
+}
+
+export function recordTopicCompleted(): void {
+  const current = getStudentStats();
+  current.topicsCompleted = (current.topicsCompleted || 0) + 1;
+  localStorage.setItem(STATS_KEY, JSON.stringify(current));
 }
 
 export function updateStats(partial: Partial<StudentStats>): StudentStats {

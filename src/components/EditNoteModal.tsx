@@ -18,17 +18,21 @@ export const EditNoteModal: React.FC<EditNoteModalProps> = ({
   const [topicTitle, setTopicTitle] = useState(note.topicTitle);
   const [definition, setDefinition] = useState(note.definition);
   const [simpleExplanation, setSimpleExplanation] = useState(note.simpleExplanation);
-  const [detailedExplanation, setDetailedExplanation] = useState(note.detailedExplanation);
-  const [whyWhereUsed, setWhyWhereUsed] = useState(note.whyWhereUsed);
+  const [howItWorks, setHowItWorks] = useState(note.howItWorks || note.detailedExplanation || "");
+  const [detailedExplanation, setDetailedExplanation] = useState(note.detailedExplanation || "");
+  const [whyWhereUsed, setWhyWhereUsed] = useState(note.whyWhereUsed || note.realLifeExample || "");
   const [syntax, setSyntax] = useState(note.syntax || "");
   const [code, setCode] = useState(note.code || "");
   const [codeExplanation, setCodeExplanation] = useState(note.codeExplanation || "");
-  const [realLifeExample, setRealLifeExample] = useState(note.realLifeExample);
+  const [realLifeExample, setRealLifeExample] = useState(note.realLifeExample || note.whyWhereUsed || "");
   const [importantPointsText, setImportantPointsText] = useState(
     note.importantPoints.join("\n")
   );
+  const [importantNotesText, setImportantNotesText] = useState(
+    (note.importantNotes || []).join("\n")
+  );
   const [commonMistakesText, setCommonMistakesText] = useState(
-    note.commonMistakes.join("\n")
+    (note.commonMistakes || []).join("\n")
   );
 
   if (!isOpen) return null;
@@ -39,13 +43,18 @@ export const EditNoteModal: React.FC<EditNoteModalProps> = ({
       topicTitle,
       definition,
       simpleExplanation,
-      detailedExplanation,
+      howItWorks: howItWorks || undefined,
+      detailedExplanation: howItWorks || detailedExplanation || undefined,
       whyWhereUsed,
       syntax: syntax || undefined,
       code: code || undefined,
       codeExplanation: codeExplanation || undefined,
       realLifeExample,
       importantPoints: importantPointsText
+        .split("\n")
+        .map((s) => s.trim())
+        .filter(Boolean),
+      importantNotes: importantNotesText
         .split("\n")
         .map((s) => s.trim())
         .filter(Boolean),
@@ -157,10 +166,24 @@ export const EditNoteModal: React.FC<EditNoteModalProps> = ({
             />
           </div>
 
+          {/* How It Works */}
+          <div className="space-y-1">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+              🔍 How It Works (Step-by-step)
+            </label>
+            <textarea
+              rows={3}
+              value={howItWorks}
+              onChange={(e) => setHowItWorks(e.target.value)}
+              placeholder="Step-by-step mechanics or conceptual process..."
+              className="w-full px-3.5 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
           {/* Real Life Analogy */}
           <div className="space-y-1">
             <label className="block text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
-              10. Real-Life Example
+              🌍 Real-Life Use / Analogy
             </label>
             <textarea
               rows={2}
@@ -173,7 +196,7 @@ export const EditNoteModal: React.FC<EditNoteModalProps> = ({
           {/* Important Points (one per line) */}
           <div className="space-y-1">
             <label className="block text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
-              11. Important Points (one per line)
+              ⭐ Key Points (one per line)
             </label>
             <textarea
               rows={4}
@@ -183,10 +206,24 @@ export const EditNoteModal: React.FC<EditNoteModalProps> = ({
             />
           </div>
 
+          {/* Important Notes (one per line) */}
+          <div className="space-y-1">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+              ⚠️ Important Exam Notes & Rules (one per line)
+            </label>
+            <textarea
+              rows={3}
+              value={importantNotesText}
+              onChange={(e) => setImportantNotesText(e.target.value)}
+              placeholder="Key exam takeaways, rules, or formulas..."
+              className="w-full px-3.5 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
           {/* Common Mistakes (one per line) */}
           <div className="space-y-1">
             <label className="block text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
-              12. Common Mistakes (one per line)
+              ⚠️ Common Mistakes (one per line)
             </label>
             <textarea
               rows={3}

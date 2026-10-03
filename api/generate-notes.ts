@@ -47,7 +47,16 @@ export default async function handler(req: any, res: any) {
 
   try {
     const body = await parseRequestBody(req);
-    const { topic, subject, difficulty, noteType, outputLength, additionalInstructions } = body;
+    const {
+      topic,
+      subject,
+      difficulty,
+      studyMode,
+      learningLevel,
+      noteType,
+      outputLength,
+      additionalInstructions,
+    } = body;
 
     if (!topic || typeof topic !== "string" || topic.trim().length < 2) {
       return res.status(400).json({
@@ -60,6 +69,8 @@ export default async function handler(req: any, res: any) {
       topic,
       subject,
       difficulty,
+      studyMode,
+      learningLevel,
       noteType,
       outputLength,
       additionalInstructions,

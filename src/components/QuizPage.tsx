@@ -223,7 +223,7 @@ export const QuizPage: React.FC<QuizPageProps> = ({
               {/* Number of Questions */}
               <div className="space-y-1">
                 <label className="block text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
-                  Questions
+                  Number of Questions
                 </label>
                 <select
                   value={questionCount}
@@ -231,15 +231,16 @@ export const QuizPage: React.FC<QuizPageProps> = ({
                   disabled={isLoading}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer"
                 >
-                  <option value={5}>5 Questions (Quick Test)</option>
-                  <option value={10}>10 Questions (Full Mock)</option>
+                  <option value={5}>5 Questions (Quick Check)</option>
+                  <option value={10}>10 Questions (Standard Test)</option>
+                  <option value={15}>15 Questions (Full Mock Exam)</option>
                 </select>
               </div>
 
               {/* Difficulty */}
               <div className="space-y-1">
                 <label className="block text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
-                  Difficulty
+                  Difficulty Level
                 </label>
                 <select
                   value={difficulty}
@@ -247,9 +248,9 @@ export const QuizPage: React.FC<QuizPageProps> = ({
                   disabled={isLoading}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer"
                 >
-                  <option value="Beginner">Beginner (Basic Concept)</option>
-                  <option value="Intermediate">Intermediate (Semester Level)</option>
-                  <option value="Advanced">Advanced (Gate / Competitive)</option>
+                  <option value="Easy">Easy (Foundational Concepts)</option>
+                  <option value="Medium">Medium (Semester Standard)</option>
+                  <option value="Hard">Hard (Exam & Application Deep Dive)</option>
                 </select>
               </div>
             </div>
@@ -337,6 +338,16 @@ export const QuizPage: React.FC<QuizPageProps> = ({
                 <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white">
                   Score: {score} / {quizData.questions.length} ({percentage}%)
                 </h3>
+                <div className="flex items-center justify-center gap-3 pt-1">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Correct: {score}</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
+                    <XCircle className="w-3.5 h-3.5" />
+                    <span>Incorrect: {quizData.questions.length - score}</span>
+                  </span>
+                </div>
                 <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
                   {percentage >= 80
                     ? "Outstanding mastery! You have strong conceptual command of this exam topic."

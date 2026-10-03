@@ -16,6 +16,8 @@ import {
 import {
   SubjectType,
   DifficultyLevel,
+  StudyMode,
+  LearningLevel,
   NoteType,
   OutputLength,
   NoteContent,
@@ -37,6 +39,8 @@ export const GenerateNotesPage: React.FC<GenerateNotesPageProps> = ({
   const [topic, setTopic] = useState(initialTopic);
   const [subject, setSubject] = useState<SubjectType>(initialSubject);
   const [customSubject, setCustomSubject] = useState("");
+  const [studyMode, setStudyMode] = useState<StudyMode>("Exam Preparation");
+  const [learningLevel, setLearningLevel] = useState<LearningLevel>("🎓 I am preparing for an exam");
   const [difficulty, setDifficulty] = useState<DifficultyLevel>("Intermediate");
   const [noteType, setNoteType] = useState<NoteType>("Exam Preparation");
   const [outputLength, setOutputLength] = useState<OutputLength>("Detailed");
@@ -57,11 +61,9 @@ export const GenerateNotesPage: React.FC<GenerateNotesPageProps> = ({
   }, [initialTopic, initialSubject]);
 
   const loadingSteps = [
-    { title: "Analyzing topic & academic syllabus...", icon: BookOpen },
-    { title: "Structuring 15 exam-standard sections...", icon: Layers },
-    { title: "Formulating definitions & real-world analogies...", icon: Brain },
-    { title: "Formatting clean code, viva answers & MCQs...", icon: Sparkles },
-    { title: "Finalizing high-yield study sheet...", icon: CheckCircle },
+    { title: "Analyzing topic & exam syllabus...", icon: BookOpen },
+    { title: "Extracting core definitions & key takeaways...", icon: Brain },
+    { title: "Formatting concise, exam-ready study notes...", icon: Sparkles },
   ];
 
   useEffect(() => {
@@ -70,7 +72,7 @@ export const GenerateNotesPage: React.FC<GenerateNotesPageProps> = ({
       setLoadingStep(0);
       interval = setInterval(() => {
         setLoadingStep((prev) => (prev < loadingSteps.length - 1 ? prev + 1 : prev));
-      }, 2400);
+      }, 1500);
     }
     return () => clearInterval(interval);
   }, [isLoading]);
@@ -106,6 +108,8 @@ export const GenerateNotesPage: React.FC<GenerateNotesPageProps> = ({
       const result = await generateNotesApi({
         topic: trimmedTopic,
         subject: targetSubject,
+        studyMode,
+        learningLevel,
         difficulty,
         noteType,
         outputLength,
@@ -143,13 +147,13 @@ export const GenerateNotesPage: React.FC<GenerateNotesPageProps> = ({
       <div className="text-center space-y-3 mb-8">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 dark:bg-blue-950/80 text-blue-600 dark:text-blue-400 border border-blue-200/80 dark:border-blue-800">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>15-Module Academic Engine</span>
+          <span>Fast & Concise Study Notes Engine</span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
           Generate Smart Study Notes
         </h1>
         <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 max-w-xl mx-auto">
-          Specify your subject, topic, and difficulty to generate exam-oriented notes, viva answers, and practice MCQs.
+          Generate short, meaningful, exam-oriented notes that help you understand and revise any topic quickly before exams.
         </p>
       </div>
 
@@ -210,6 +214,172 @@ export const GenerateNotesPage: React.FC<GenerateNotesPageProps> = ({
                 ))}
               </div>
             </div>
+          </div>
+
+          {/* SMART STUDY MODE SELECTION (Quick Revision, Exam Preparation, Standard Notes, Deep Understanding, Last-Minute Revision) */}
+          <div className="space-y-3 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-blue-50/70 via-indigo-50/40 to-purple-50/60 dark:from-gray-800/80 dark:via-gray-850 dark:to-gray-800/80 border border-blue-100 dark:border-gray-700/80">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <label
+                  htmlFor="study-mode-select"
+                  className="block text-xs sm:text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-white flex items-center gap-1.5"
+                >
+                  <span>🎯 Study Mode Selection</span>
+                </label>
+                <p className="text-xs text-gray-600 dark:text-gray-300">
+                  Select your study intent. Gemini dynamically adapts its depth, structure, and token focus.
+                </p>
+              </div>
+              <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/60 dark:text-blue-300">
+                Active: {studyMode}
+              </span>
+            </div>
+
+            {/* Quick-Select Mode Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 pt-1">
+              {[
+                {
+                  id: "Quick Revision" as StudyMode,
+                  icon: "⚡",
+                  title: "Quick Revision",
+                  subtitle: "300–500 words",
+                  desc: "High-yield rapid review",
+                },
+                {
+                  id: "Exam Preparation" as StudyMode,
+                  icon: "📝",
+                  title: "Exam Preparation",
+                  subtitle: "500–800 words",
+                  desc: "Definitions & exam points",
+                },
+                {
+                  id: "Standard Notes" as StudyMode,
+                  icon: "📚",
+                  title: "Standard Notes",
+                  subtitle: "600–900 words",
+                  desc: "Balanced academic depth",
+                },
+                {
+                  id: "Deep Understanding" as StudyMode,
+                  icon: "🧠",
+                  title: "Deep Understanding",
+                  subtitle: "800–1200 words",
+                  desc: "Step-by-step reasoning",
+                },
+                {
+                  id: "Last-Minute Revision" as StudyMode,
+                  icon: "🚨",
+                  title: "Last-Minute Revision",
+                  subtitle: "250–400 words",
+                  desc: "Must-remember rules",
+                },
+              ].map((mode) => {
+                const isSelected = studyMode === mode.id;
+                return (
+                  <button
+                    key={mode.id}
+                    type="button"
+                    disabled={isLoading}
+                    onClick={() => {
+                      setStudyMode(mode.id);
+                      if (mode.id === "Quick Revision" || mode.id === "Last-Minute Revision") {
+                        setOutputLength("Short");
+                        setNoteType("Quick Revision");
+                      } else if (mode.id === "Deep Understanding") {
+                        setOutputLength("Detailed");
+                        setNoteType("Detailed Notes");
+                      } else {
+                        setOutputLength("Medium");
+                        setNoteType("Exam Preparation");
+                      }
+                    }}
+                    className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                      isSelected
+                        ? "bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/25 ring-2 ring-blue-500/30 dark:ring-blue-400/40"
+                        : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 hover:bg-blue-50/50 dark:hover:bg-gray-750"
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-lg">{mode.icon}</span>
+                        <span
+                          className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${
+                            isSelected
+                              ? "bg-blue-700/80 text-blue-100"
+                              : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
+                          }`}
+                        >
+                          {mode.subtitle}
+                        </span>
+                      </div>
+                      <p className="font-bold text-xs leading-tight">{mode.title}</p>
+                    </div>
+                    <p
+                      className={`text-[10px] mt-1 line-clamp-1 ${
+                        isSelected ? "text-blue-100" : "text-gray-600 dark:text-gray-300"
+                      }`}
+                    >
+                      {mode.desc}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Standard Dropdown for accessibility and form submission */}
+            <div className="pt-1">
+              <select
+                id="study-mode-select"
+                value={studyMode}
+                onChange={(e) => {
+                  const val = e.target.value as StudyMode;
+                  setStudyMode(val);
+                  if (val === "Quick Revision" || val === "Last-Minute Revision") {
+                    setOutputLength("Short");
+                    setNoteType("Quick Revision");
+                  } else if (val === "Deep Understanding") {
+                    setOutputLength("Detailed");
+                    setNoteType("Detailed Notes");
+                  } else {
+                    setOutputLength("Medium");
+                    setNoteType("Exam Preparation");
+                  }
+                }}
+                disabled={isLoading}
+                className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-xs sm:text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer font-medium"
+              >
+                <option value="Quick Revision">⚡ Quick Revision (300–500 words • Rapid 5-min recap)</option>
+                <option value="Exam Preparation">📝 Exam Preparation (500–800 words • Definitions, formulas & exam points)</option>
+                <option value="Standard Notes">📚 Standard Notes (600–900 words • Balanced concepts & understanding)</option>
+                <option value="Deep Understanding">🧠 Deep Understanding (800–1200 words • Step-by-step reasoning & depth)</option>
+                <option value="Last-Minute Revision">🚨 Last-Minute Revision (250–400 words • Must-remember formulas & rules)</option>
+              </select>
+            </div>
+          </div>
+
+          {/* PERSONALIZED LEARNING LEVEL */}
+          <div className="space-y-1.5">
+            <label htmlFor="learning-level-select" className="block text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
+              <span>🎓 Personalized Learning Level</span>
+            </label>
+            <select
+              id="learning-level-select"
+              value={learningLevel}
+              onChange={(e) => setLearningLevel(e.target.value as LearningLevel)}
+              disabled={isLoading}
+              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/60 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer font-medium"
+            >
+              <option value="🌱 I know nothing about this topic">🌱 I know nothing about this topic</option>
+              <option value="📖 I know the basics">📖 I know the basics</option>
+              <option value="🎓 I am preparing for an exam">🎓 I am preparing for an exam</option>
+              <option value="🔄 I only need revision">🔄 I only need revision</option>
+            </select>
+            <p className="text-[11px] text-gray-600 dark:text-gray-300">
+              {learningLevel.includes("nothing") && "Starts with intuitive everyday analogies and zero assumed knowledge."}
+              {learningLevel.includes("basics") && "Skips introductory fluff and dives into intermediate mechanisms."}
+              {learningLevel.includes("exam") && "Targets university exam criteria, scoring keywords, and formulas."}
+              {learningLevel.includes("revision") && "Skips long explanations; gives punchy revision points only."}
+            </p>
           </div>
 
           {/* Subject & Difficulty row */}
@@ -282,10 +452,10 @@ export const GenerateNotesPage: React.FC<GenerateNotesPageProps> = ({
                 disabled={isLoading}
                 className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/60 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
               >
-                <option value="Quick Revision">Quick Revision (Crisp & High-Yield)</option>
-                <option value="Detailed Notes">Detailed Notes (Full Concept Depth)</option>
-                <option value="Exam Preparation">Exam Preparation (Standard University Format)</option>
-                <option value="Interview Preparation">Interview Preparation (Viva & Questions)</option>
+                <option value="Quick Revision">Quick Revision (300–500 words • Rapid Exam Recap)</option>
+                <option value="Detailed Notes">Detailed Notes (800–1200 words • Full Concept Depth)</option>
+                <option value="Exam Preparation">Exam Preparation (500–800 words • Standard Exam Notes)</option>
+                <option value="Interview Preparation">Interview Preparation (Core Viva & Concepts)</option>
                 <option value="Beginner Friendly">Beginner Friendly (Intuitive Analogies)</option>
               </select>
             </div>
@@ -302,9 +472,9 @@ export const GenerateNotesPage: React.FC<GenerateNotesPageProps> = ({
                 disabled={isLoading}
                 className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/60 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
               >
-                <option value="Short">Short (Summary & Key Points)</option>
-                <option value="Medium">Medium (Balanced)</option>
-                <option value="Detailed">Detailed (Comprehensive 15 Sections)</option>
+                <option value="Short">Short (300–500 words maximum)</option>
+                <option value="Medium">Medium (500–800 words standard)</option>
+                <option value="Detailed">Detailed (800–1200 words maximum)</option>
               </select>
             </div>
           </div>
@@ -361,7 +531,7 @@ export const GenerateNotesPage: React.FC<GenerateNotesPageProps> = ({
               {isLoading ? (
                 <>
                   <RefreshCw className="w-5 h-5 animate-spin" />
-                  <span>✨ Generating your notes…</span>
+                  <span>✨ Generating concise notes...</span>
                 </>
               ) : (
                 <>
@@ -381,7 +551,7 @@ export const GenerateNotesPage: React.FC<GenerateNotesPageProps> = ({
                 <div className="flex items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-ping" />
                   <span className="text-xs font-bold uppercase tracking-wider text-blue-700 dark:text-blue-300">
-                    AI Pedagogical Processor Active
+                    ✨ Generating concise notes...
                   </span>
                 </div>
                 <span className="text-xs text-blue-600 dark:text-blue-400 font-mono font-semibold">
@@ -406,7 +576,7 @@ export const GenerateNotesPage: React.FC<GenerateNotesPageProps> = ({
               </div>
 
               <p className="text-[11px] text-gray-600 dark:text-gray-300 italic">
-                Tip: Writing 15 structured sections including 2, 5, 10-mark exam questions, real-life analogies, and viva voce Q&A.
+                Optimized for rapid college revision: definitions, key concepts, formulas, and common exam pitfalls.
               </p>
             </div>
           </div>

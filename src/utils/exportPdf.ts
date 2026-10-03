@@ -102,43 +102,57 @@ export function downloadNotesAsPdf(note: NoteContent): void {
     // 2. Simple Explanation
     addSection("2. Simple Explanation", note.simpleExplanation);
 
-    // 3. Detailed Explanation
-    addSection("3. Detailed Explanation", note.detailedExplanation);
+    // 3. Key Points
+    if (note.importantPoints?.length) {
+      addSection("3. Key Points (Revision Cheat Sheet)", note.importantPoints);
+    }
 
-    // 4. Why / Where It Is Used
-    addSection("4. Why & Where It Is Used", note.whyWhereUsed);
+    // 4. How It Works
+    const howWorks = note.howItWorks || (note.detailedExplanation !== note.simpleExplanation ? note.detailedExplanation : "");
+    if (howWorks) {
+      addSection("4. How It Works", howWorks);
+    }
 
-    // 5. Syntax
+    // 5. Example
+    if (note.example) {
+      addSection("5. Example Scenario", note.example);
+    }
+
+    // 6. Real-Life Use
+    const realLife = note.realLifeExample || note.whyWhereUsed;
+    if (realLife) {
+      addSection("6. Real-Life Use", realLife);
+    }
+
+    // 7. Syntax
     if (note.syntax) {
-      addSection("5. Syntax / Mathematical Representation", note.syntax, true);
+      addSection("7. Syntax & Formulas", note.syntax, true);
     }
 
-    // 6. Example
-    addSection("6. Example", note.example);
-
-    // 7. Code
+    // 8. Code
     if (note.code) {
-      addSection("7. Code Implementation", note.code, true);
+      addSection("8. Code Implementation", note.code, true);
     }
 
-    // 8. Code Explanation
+    // 9. Code Explanation
     if (note.codeExplanation) {
-      addSection("8. Code Explanation", note.codeExplanation);
+      addSection("9. Code Explanation", note.codeExplanation);
     }
 
-    // 9. Output
+    // 10. Output
     if (note.output) {
-      addSection("9. Expected Output", note.output, true);
+      addSection("10. Expected Output", note.output, true);
     }
 
-    // 10. Real-Life Example
-    addSection("10. Real-Life Analogy", note.realLifeExample);
-
-    // 11. Important Points
-    addSection("11. Important Points for Revision", note.importantPoints);
+    // 11. Important Notes
+    if (note.importantNotes?.length) {
+      addSection("11. Important Notes & Exam Rules", note.importantNotes);
+    }
 
     // 12. Common Mistakes
-    addSection("12. Common Mistakes & Exam Pitfalls", note.commonMistakes);
+    if (note.commonMistakes?.length) {
+      addSection("12. Common Exam Pitfalls", note.commonMistakes);
+    }
 
     // 13. Exam Questions
     if (note.examQuestions) {

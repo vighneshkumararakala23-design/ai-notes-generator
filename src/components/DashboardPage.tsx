@@ -38,95 +38,94 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 }) => {
   const statCards = [
     {
+      title: "Topics Studied",
+      value: stats.topicsStudied || (recentNotes.length + savedNotes.length ? Math.max(recentNotes.length, savedNotes.length) : 0),
+      icon: BookOpen,
+      color: "text-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 border-indigo-200 dark:border-indigo-900/50",
+      label: "Unique topics explored",
+    },
+    {
       title: "Notes Generated",
       value: stats.notesGenerated || recentNotes.length,
       icon: Sparkles,
       color: "text-blue-600 bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-900/50",
-      label: "Total AI study packets built",
+      label: "Total study packets created",
     },
     {
-      title: "Notes Saved",
-      value: stats.notesSaved || savedNotes.length,
-      icon: Bookmark,
-      color: "text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200 dark:border-emerald-900/50",
-      label: "Bookmarked in your library",
+      title: "Revision Sheets",
+      value: stats.revisionSheetsCreated || savedNotes.filter((n) => n.handwrittenSheet || n.revisionSheet).length,
+      icon: FileText,
+      color: "text-amber-600 bg-amber-50 dark:bg-amber-950/60 border-amber-200 dark:border-amber-900/50",
+      label: "1-page handwritten sheets",
     },
     {
       title: "Quizzes Completed",
       value: stats.quizzesCompleted || quizHistory.length,
       icon: HelpCircle,
       color: "text-purple-600 bg-purple-50 dark:bg-purple-950/60 border-purple-200 dark:border-purple-900/50",
-      label: "Interactive practice sessions",
+      label: "Practice tests taken",
     },
     {
       title: "Average Quiz Score",
       value: stats.averageQuizScore ? `${stats.averageQuizScore}%` : "—",
       icon: Award,
-      color: "text-amber-600 bg-amber-50 dark:bg-amber-950/60 border-amber-200 dark:border-amber-900/50",
-      label: "Overall accuracy rate",
+      color: "text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200 dark:border-emerald-900/50",
+      label: "Actual performance average",
     },
   ];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
-      {/* Welcome Banner */}
-      <div className="rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white p-6 sm:p-10 shadow-lg relative overflow-hidden">
-        <div className="relative z-10 max-w-2xl space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-white/15 backdrop-blur-md">
-            <span>Semester Academic Hub</span>
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 dark:border-gray-800 pb-6">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xl">📊</span>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+              My Study Progress
+            </h1>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
-            Welcome back 👋
-          </h1>
-          <p className="text-blue-100 text-xs sm:text-sm leading-relaxed">
-            Your personal AI study console. Review your saved exam cheat-sheets, track quiz performance, and prepare for exams faster.
+          <p className="text-sm text-gray-600 dark:text-gray-300">
+            Real tracked progress across all your topics, notes, handwritten sheets, and quiz scores.
           </p>
+        </div>
 
-          {/* Quick Actions in Banner */}
-          <div className="pt-2 flex flex-wrap items-center gap-2.5">
-            <button
-              onClick={onNavigateToGenerate}
-              className="px-4 py-2 rounded-xl bg-white text-blue-700 hover:bg-blue-50 font-bold text-xs shadow-sm transition-colors cursor-pointer flex items-center gap-1.5"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Generate Notes</span>
-            </button>
-            <button
-              onClick={onNavigateToQuiz}
-              className="px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white font-semibold text-xs border border-white/20 transition-colors cursor-pointer flex items-center gap-1.5"
-            >
-              <HelpCircle className="w-3.5 h-3.5" />
-              <span>Take Quiz</span>
-            </button>
-            <button
-              onClick={onNavigateToMyNotes}
-              className="px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white font-semibold text-xs border border-white/20 transition-colors cursor-pointer flex items-center gap-1.5"
-            >
-              <Bookmark className="w-3.5 h-3.5" />
-              <span>My Notes</span>
-            </button>
-          </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onNavigateToGenerate}
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm shadow-sm transition-all cursor-pointer"
+          >
+            <Sparkles className="w-4 h-4" />
+            <span>Generate Notes</span>
+          </button>
+          <button
+            onClick={onNavigateToQuiz}
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 font-semibold text-xs sm:text-sm transition-all cursor-pointer"
+          >
+            <HelpCircle className="w-4 h-4" />
+            <span>Practice Quiz</span>
+          </button>
         </div>
       </div>
 
-      {/* 4 Statistics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      {/* 5 Real Study Progress Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         {statCards.map((card, i) => {
           const Icon = card.icon;
           return (
             <div
               key={i}
-              className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 shadow-sm space-y-3"
+              className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 sm:p-5 shadow-xs space-y-3"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">{card.title}</span>
-                <div className={`w-9 h-9 rounded-xl flex items-center justify-center border ${card.color}`}>
+                <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">{card.title}</span>
+                <div className={`w-8 h-8 rounded-xl flex items-center justify-center border ${card.color}`}>
                   <Icon className="w-4 h-4" />
                 </div>
               </div>
               <div className="space-y-0.5">
                 <p className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white">{card.value}</p>
-                <p className="text-xs text-gray-600 dark:text-gray-300">{card.label}</p>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-tight">{card.label}</p>
               </div>
             </div>
           );
